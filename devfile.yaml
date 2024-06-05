@@ -1,0 +1,61 @@
+schemaVersion: 2.1.0
+metadata:
+  name: super-heroes
+components:
+  - name: tools
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel8:latest
+      memoryLimit: 3Gi
+      endpoints:
+        - exposure: none
+          name: debug
+          protocol: tcp
+          targetPort: 5005
+        - exposure: public
+          name: 8080-tcp
+          protocol: http
+          targetPort: 8080
+      env:
+        - name: USE_JAVA17
+          value: "true"
+        - name: KUBEDOCK_ENABLED
+          value: "true"
+        - name: DOCKER_HOST
+          value: "tcp://127.0.0.1:2475"
+        - name: TESTCONTAINERS_RYUK_DISABLED
+          value: "true"
+
+  - name: db-dev
+    container:
+      image: registry.redhat.io/rhel8/postgresql-15
+      memoryLimit: 512M
+      endpoints:
+        - exposure: none
+          name: db-dev
+          protocol: tcp
+          targetPort: 5432
+      env:
+        - name: POSTGRESQL_USER
+          value: quarkus
+        - name: POSTGRESQL_PASSWORD
+          value: quarkus
+        - name: POSTGRESQL_DATABASE
+          value: quarkus
+
+  - name: db-test
+    container:
+      image: registry.redhat.io/rhel8/postgresql-15
+      memoryLimit: 512M
+      endpoints:
+        - exposure: none
+          name: db-test
+          protocol: tcp
+          targetPort: 5433
+      env:
+        - name: POSTGRESQL_USER
+          value: quarkus
+        - name: POSTGRESQL_PASSWORD
+          value: quarkus
+        - name: POSTGRESQL_DATABASE
+          value: quarkus
+
